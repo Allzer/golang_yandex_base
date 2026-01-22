@@ -1,26 +1,25 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 )
 
 func main() {
-	var a, b float32
-	fmt.Scan(&a)
-	fmt.Scan(&b)
+	array := []int{}
 
-	result, error := calc(a,b)
-	if error != nil{
-		panic("Вы пытаетесь делить на 0")
-	}
-	fmt.Println("Ррезультат деления", result)
+	enterTransactions(&array)
+	fmt.Print(array)
 }
 
-func calc(a, b float32) (float32, error) {
-	if b == 0 {
-		return 0, errors.New("На 0 делить нельзя")
-	}else{
-		return a / b, nil
-	}
+func enterTransactions(array *[]int) {
+	transaction := 0
+	for {
+		fmt.Scan(&transaction)
+		if transaction == -10 || transaction == 10 || transaction == 40 {
+			*array = append(*array, transaction)
+		}
+		if len(*array) == 3{
+			break
+		}
+	} 
 }
