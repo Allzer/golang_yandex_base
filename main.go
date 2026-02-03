@@ -1,20 +1,92 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"math/rand/v2"
+	"net/url"
+	"time"
+)
 
-func main() {
-
-	a := 2
-	b := 3
-
-	var res int
-	
-	quatro(&a, &b, &res)
-
-	fmt.Println(res)
-
+type userInfo struct{
+	login, psw, url string
 }
 
-func quatro(num_a, num_b, res *int) {
-	*res = *num_a + *num_b
+type userInfoWithTimeStamp struct{
+	ceratedAt time.Time
+	updatedAt time.Time
+	userInfo
+}
+
+func (user userInfo) outputInfo(){
+	fmt.Println(user)
+}
+
+func (user *userInfo) genPsw(n int, ){
+	psw := make([]rune, n)
+	
+	for i := range(psw) {
+		psw[i] = letterslice[rand.IntN(len(letterslice))]
+	}
+
+	user.psw = string(psw)
+}
+
+func newUser() (*userInfo, error) {
+
+	loginStr := promptData("Ввведите логи")
+
+	if loginStr == ""{
+		return nil, errors.New("INCORRECT_LOGIN")
+	}
+
+	psw := promptData("Введите psw")
+
+	urlStr := promptData("Введите url")
+	_, err := url.ParseRequestURI(urlStr)
+
+	if err != nil{
+		fmt.Println(err)
+		return nil, errors.New("INCORRECT_URL")
+	}
+	
+	user := &userInfo{
+		login: loginStr,
+		psw: psw,
+		url: urlStr,
+	}
+
+	if psw == ""{
+		user.genPsw(10)
+	}
+
+	return user, nil
+}
+
+var letterslice = []rune("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890")
+
+func main() {
+	user, err := newUser()
+	if err != nil {
+		return
+	}
+	user.outputInfo()
+}
+
+func promptData(prompt string) string{
+	fmt.Println(prompt)
+
+	var res string
+	fmt.Scan(&res)
+	return res
+}
+
+func genPsw(n int) string {
+	psw := make([]rune, n)
+	
+	for i := range(psw) {
+		psw[i] = letterslice[rand.IntN(len(letterslice))]
+	}
+
+	return string(psw)
 }
