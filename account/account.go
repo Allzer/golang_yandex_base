@@ -1,4 +1,4 @@
-package main
+package account
 
 import (
 	"errors"
@@ -6,25 +6,27 @@ import (
 	"math/rand/v2"
 	"net/url"
 	"time"
+	"github.com/fatih/color"
 )
 
 var letterslice = []rune("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890")
 
-type userInfo struct {
+type UserInfo struct {
 	login, psw, url string
 }
 
 type userInfoWithTimeStamp struct {
 	ceratedAt time.Time
 	updatedAt time.Time
-	userInfo
+	UserInfo
 }
 
-func (user userInfo) outputInfo() {
+func (user UserInfo) OutputInfo() {
+	color.Cyan("Информация про пользователя")
 	fmt.Println(user)
 }
 
-func (user *userInfo) genPsw(n int) {
+func (user *UserInfo) genPsw(n int) {
 	psw := make([]rune, n)
 
 	for i := range psw {
@@ -34,7 +36,7 @@ func (user *userInfo) genPsw(n int) {
 	user.psw = string(psw)
 }
 
-func newUser() (*userInfo, error) {
+func NewUser() (*UserInfo, error) {
 
 	loginStr := promptData("Ввведите логи")
 
@@ -52,7 +54,7 @@ func newUser() (*userInfo, error) {
 		return nil, errors.New("INCORRECT_URL")
 	}
 
-	user := &userInfo{
+	user := &UserInfo{
 		login: loginStr,
 		psw:   psw,
 		url:   urlStr,
@@ -63,4 +65,12 @@ func newUser() (*userInfo, error) {
 	}
 
 	return user, nil
+}
+
+func promptData(prompt string) string{
+	fmt.Println(prompt)
+
+	var res string
+	fmt.Scan(&res)
+	return res
 }

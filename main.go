@@ -1,21 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"golang_learinig/account"
+	"golang_learinig/files"
 )
 
+//TODO
+//Создать пакет, который будет работать с файлами - "files"
+
 func main() {
-	user, err := newUser()
+	user, err := account.NewUser()
 	if err != nil {
 		return
 	}
-	user.outputInfo()
-}
-
-func promptData(prompt string) string{
-	fmt.Println(prompt)
-
-	var res string
-	fmt.Scan(&res)
-	return res
+	files.WriteFile()
+	files.ReadFile()
+	user.OutputInfo()
 }
