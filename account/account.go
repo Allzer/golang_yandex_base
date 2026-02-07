@@ -1,24 +1,28 @@
 package account
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand/v2"
-	"net/url"
-	"time"
+
 	"github.com/fatih/color"
 )
 
 var letterslice = []rune("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890")
 
 type UserInfo struct {
-	login, psw, url string
+	Login string `json:"login"`
+	Psw   string `json:"psw"`
+	Url   string `json:"url"`
 }
 
-type userInfoWithTimeStamp struct {
-	ceratedAt time.Time
-	updatedAt time.Time
-	UserInfo
+func (user *UserInfo) ToByteSlice() ([]byte, error){
+	file, err := json.Marshal(user)
+	if err != nil{
+		fmt.Println(err)
+	}
+	return file, nil
 }
 
 func (user UserInfo) OutputInfo() {
@@ -33,7 +37,7 @@ func (user *UserInfo) genPsw(n int) {
 		psw[i] = letterslice[rand.IntN(len(letterslice))]
 	}
 
-	user.psw = string(psw)
+	user.Psw = string(psw)
 }
 
 func NewUser() (*UserInfo, error) {
@@ -47,17 +51,11 @@ func NewUser() (*UserInfo, error) {
 	psw := promptData("Введите psw")
 
 	urlStr := promptData("Введите url")
-	_, err := url.ParseRequestURI(urlStr)
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, errors.New("INCORRECT_URL")
-	}
 
 	user := &UserInfo{
-		login: loginStr,
-		psw:   psw,
-		url:   urlStr,
+		Login: loginStr,
+		Psw:   psw,
+		Url:   urlStr,
 	}
 
 	if psw == "" {
@@ -67,7 +65,7 @@ func NewUser() (*UserInfo, error) {
 	return user, nil
 }
 
-func promptData(prompt string) string{
+func promptData(prompt string) string {
 	fmt.Println(prompt)
 
 	var res string
