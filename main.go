@@ -1,26 +1,48 @@
 package main
 
 import (
+	"fmt"
 	"golang_learinig/account"
-	"golang_learinig/files"
 )
 
+//Создать аккаунт
+//Найти аккаунт
+//Удалить аккаунт я не сделал по причине "лень"
+//Выход
+
 func main() {
-	user, err := account.NewUser()
-	if err != nil {
-		return
+Menu:
+	for {
+		variant := getMenu()
+		switch variant {
+		case 1:
+			account.NewUser()
+		case 2:
+			url := account.PromptData("Введите url")
+			users := account.NewVault().FindUserByUrl(url)
+			fmt.Println(users)
+		case 3:
+			delUser()
+		case 4:
+			break Menu
+		}
+		
 	}
 
-	userBytesSlice, err := user.ToByteSlice()
+}
 
-	files.WriteFile(
-		files.WriteFileParams{
-			Content:  userBytesSlice,
-			NameFile: "userInfo.json",
-		})
+func getMenu() int{
+	var variant int
+	fmt.Println("Выберите вариант")
+	fmt.Println("1: Создать аккаунт")
+	fmt.Println("2: Найти аккаунт")
+	fmt.Println("3: Удалить аккаунт")
+	fmt.Println("4: Выход")
 
-	// files.ReadFile(files.WriteFileParams{
-	// 	NameFile: "userinfo.txt",
-	// })
-	user.OutputInfo()
+	fmt.Scan(&variant)
+	return variant
+}
+
+func delUser() {
+
 }

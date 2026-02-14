@@ -10,6 +10,10 @@ type WriteFileParams struct {
 	NameFile string
 }
 
+type ReadFileFileParams struct {
+	NameFile string
+}
+
 func WriteFile(p WriteFileParams) {
 	file, err := os.Create(fmt.Sprintf("files/%s", p.NameFile))
 	if err != nil {
@@ -26,8 +30,9 @@ func WriteFile(p WriteFileParams) {
 	file.Close()
 }
 
-func ReadFile(p WriteFileParams) {
+func ReadFile(p ReadFileFileParams) ([]byte, error) {
 	file_name := fmt.Sprintf("files/%s", p.NameFile)
-	data, _ := os.ReadFile(file_name)
-	fmt.Println(string(data))
+	data, err := os.ReadFile(file_name)
+	// fmt.Println(string(data))
+	return data, err
 }

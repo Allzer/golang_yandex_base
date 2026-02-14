@@ -1,28 +1,19 @@
 package account
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
+	"golang_learinig/files"
 	"math/rand/v2"
-
 	"github.com/fatih/color"
 )
 
 var letterslice = []rune("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890")
+var vault = NewVault()
 
 type UserInfo struct {
 	Login string `json:"login"`
 	Psw   string `json:"psw"`
 	Url   string `json:"url"`
-}
-
-func (user *UserInfo) ToByteSlice() ([]byte, error){
-	file, err := json.Marshal(user)
-	if err != nil{
-		fmt.Println(err)
-	}
-	return file, nil
 }
 
 func (user UserInfo) OutputInfo() {
@@ -40,17 +31,39 @@ func (user *UserInfo) genPsw(n int) {
 	user.Psw = string(psw)
 }
 
-func NewUser() (*UserInfo, error) {
+func NewUser() {
+	
+	user := CreateUserProfile()
+	vault.AddUser(*user)
+	fmt.Println(vault)
+	data, err := vault.ToByteSlice()
 
-	loginStr := promptData("Ввведите логи")
-
-	if loginStr == "" {
-		return nil, errors.New("INCORRECT_LOGIN")
+	if err != nil{
+		fmt.Println("Не удалось сделать запись")
 	}
 
-	psw := promptData("Введите psw")
+	files.WriteFile(
+		files.WriteFileParams{
+			Content: data,
+			NameFile: "userInfo.json",
+		})
 
-	urlStr := promptData("Введите url")
+}
+
+func PromptData(prompt string) string {
+	fmt.Println(prompt)
+
+	var res string
+	fmt.Scan(&res)
+	return res
+}
+
+func CreateUserProfile() *UserInfo{
+	loginStr := PromptData("Ввведите логи")
+
+	psw := PromptData("Введите psw")
+
+	urlStr := PromptData("Введите url")
 
 	user := &UserInfo{
 		Login: loginStr,
@@ -62,13 +75,5 @@ func NewUser() (*UserInfo, error) {
 		user.genPsw(10)
 	}
 
-	return user, nil
-}
-
-func promptData(prompt string) string {
-	fmt.Println(prompt)
-
-	var res string
-	fmt.Scan(&res)
-	return res
+	return user
 }
