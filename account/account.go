@@ -3,7 +3,9 @@ package account
 import (
 	"fmt"
 	"golang_learinig/files"
+	"golang_learinig/output"
 	"math/rand/v2"
+
 	"github.com/fatih/color"
 )
 
@@ -39,7 +41,7 @@ func NewUser() {
 	data, err := vault.ToByteSlice()
 
 	if err != nil{
-		fmt.Println("Не удалось сделать запись")
+		output.PrintError("Не удалось беревести в байты")
 	}
 
 	files.WriteFile(

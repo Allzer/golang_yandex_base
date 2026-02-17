@@ -11,6 +11,11 @@ type Vault struct {
 	User []UserInfo `json:"accounts"`
 }
 
+type DB interface{ //интерфейс - список методов, которые должны быть в структуре
+	Read() ([]byte, error)
+	Write([]byte) 
+}
+
 func NewVault() *Vault {
 
 	file, err := files.ReadFile(files.ReadFileFileParams{
