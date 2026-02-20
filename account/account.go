@@ -60,6 +60,20 @@ func PromptData(prompt string) string {
 	return res
 }
 
+
+
+func PromptDataTaskGeneric[T any](prompt []T) string {
+	fmt.Println(prompt)
+
+	for _, data := range(prompt){
+		fmt.Println(data)
+	}
+
+	var res string
+	fmt.Scan(&res)
+	return res
+}
+
 func CreateUserProfile() *UserInfo{
 	loginStr := PromptData("Ввведите логи")
 

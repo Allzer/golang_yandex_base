@@ -13,34 +13,25 @@ import (
 func main() {
 Menu:
 	for {
-		variant := getMenu()
+		variant := account.PromptDataTaskGeneric([]string{
+			"Выберите вариант",
+			"1: Создать аккаунт",
+			"2: Найти аккаунт",
+			"3: Выход",
+		})
 		switch variant {
-		case 1:
+		case "1":
 			account.NewUser()
-		case 2:
+		case "2":
 			url := account.PromptData("Введите url")
 			users := account.NewVault().FindUserByUrl(url)
 			fmt.Println(users)
-		case 3:
-			delUser()
-		case 4:
+		case "3":
 			break Menu
 		}
 		
 	}
 
-}
-
-func getMenu() int{
-	var variant int
-	fmt.Println("Выберите вариант")
-	fmt.Println("1: Создать аккаунт")
-	fmt.Println("2: Найти аккаунт")
-	fmt.Println("3: Удалить аккаунт")
-	fmt.Println("4: Выход")
-
-	fmt.Scan(&variant)
-	return variant
 }
 
 func delUser() {

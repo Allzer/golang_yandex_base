@@ -53,7 +53,7 @@ func (vault *Vault) FindUserByUrl(url string) []UserInfo {
 	users := []UserInfo{}
 
 	for _, user := range vault.User {
-		isMatched := strings.Contains(user.Url, url) //записать в Notions
+		isMatched := strings.Contains(user.Url, url) //записать в Notions strings.Contains(user.Url, url)
 
 		if isMatched{
 			users = append(users, user)
