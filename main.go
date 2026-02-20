@@ -1,39 +1,20 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"golang_learinig/account"
+	"http/geo"
+	"http/weather"
 )
 
-//Создать аккаунт
-//Найти аккаунт
-//Удалить аккаунт я не сделал по причине "лень"
-//Выход
-
 func main() {
-Menu:
-	for {
-		variant := account.PromptDataTaskGeneric([]string{
-			"Выберите вариант",
-			"1: Создать аккаунт",
-			"2: Найти аккаунт",
-			"3: Выход",
-		})
-		switch variant {
-		case "1":
-			account.NewUser()
-		case "2":
-			url := account.PromptData("Введите url")
-			users := account.NewVault().FindUserByUrl(url)
-			fmt.Println(users)
-		case "3":
-			break Menu
-		}
-		
-	}
+	city := flag.String("city", "", "Город")
+	format := flag.Int("format", 1, "Тип ответа")
 
-}
-
-func delUser() {
-
+	flag.Parse()
+	geoData, _ := geo.GetMyLocation(*city)
+	fmt.Println(geoData)
+	
+	weatherData := weather.GetWeather(*geoData, *format)
+	fmt.Println(weatherData)
 }
